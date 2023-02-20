@@ -1,4 +1,4 @@
-import { Injectable }       from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository }       from 'typeorm';
 
@@ -16,7 +16,13 @@ export class IncomeCategoriesService {
   ) {}
 
   async create(incomeCategory: CreateIncomeCategoryDto) {
-    return await this.incomeCategoryRep.insert(incomeCategory);
+    try {
+      return await this.incomeCategoryRep.insert(incomeCategory);
+    } catch (error) {
+      error.userError = 'Произошла ошибка при создании новой доходной категории.';
+      throw new HttpException(error, HttpStatus.NOT_FOUND);
+    }
+    
   }
 
   async findAll(): Promise<IncomeCategory[]> {
