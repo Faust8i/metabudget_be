@@ -12,6 +12,15 @@ export class IncomeCategory {
 
   @Column()
   order_pos: number;
+
+  @Column({ type: 'timestamp with time zone' })
+  created_at: Date;
+
+  @Column({ type: 'timestamp with time zone' })
+  updated_at: Date;
+
+  @Column({ type: 'timestamp with time zone', nullable: true })
+  deleted_at: Date;
   
   @OneToMany(type => IncomeItem, incomeItem => incomeItem.income_category_id)
   income_items: IncomeItem[];

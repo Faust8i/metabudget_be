@@ -13,6 +13,15 @@ export class IncomeItem {
   @Column()
   order_pos: number;
 
+  @Column({ type: 'timestamp with time zone' })
+  created_at: Date;
+
+  @Column({ type: 'timestamp with time zone' })
+  updated_at: Date;
+
+  @Column({ type: 'timestamp with time zone', nullable: true })
+  deleted_at: Date;
+
   @Column()
   income_category_id: number;
 
