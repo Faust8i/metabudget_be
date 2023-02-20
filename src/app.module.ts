@@ -10,6 +10,9 @@ import { IncomeItemsService }      from './core/income/item/income-items.service
 import { IncomeCategory } from './core/entities/income-category.entity';
 import { IncomeItem }     from './core/entities/income-item.entity';
 
+import { ErrorFilter } from './core/filters/error.filter';
+import { APP_FILTER } from '@nestjs/core';
+
 
 @Module({
   imports: [
@@ -35,6 +38,10 @@ import { IncomeItem }     from './core/entities/income-item.entity';
       IncomeItemsController, 
     ],
     providers: [
+      {
+        provide: APP_FILTER,
+        useClass: ErrorFilter
+      },
       IncomeCategoriesService,
       IncomeItemsService,
     ],
