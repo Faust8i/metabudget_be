@@ -16,8 +16,8 @@ export class IncomeItemsService {
     @InjectRepository(IncomeItem) private readonly IncomeItemRep: Repository<IncomeItem>,
   ) {}
 
-  async create(incomeItem: CreateIncomeItemDto) {
-    return await this.IncomeItemRep.insert(incomeItem);
+  async create(income_item: CreateIncomeItemDto) {
+    return await this.IncomeItemRep.insert(income_item);
   }
 
   async findAll() {
@@ -35,8 +35,8 @@ export class IncomeItemsService {
     return await this.IncomeItemRep.findOne({where: {income_item_id}});
   }
 
-  async update(income_item_id: number, incomeItem: UpdateIncomeItemDto) {
-    return await this.IncomeItemRep.update(income_item_id, incomeItem);
+  async update(income_item_id: number, income_item: UpdateIncomeItemDto) {
+    return await this.IncomeItemRep.update(income_item_id, income_item);
   }
 
   async remove(income_item_id: number) {

@@ -15,14 +15,13 @@ export class IncomeCategoriesService {
     @InjectRepository(IncomeCategory) private readonly incomeCategoryRep: Repository<IncomeCategory>,
   ) {}
 
-  async create(incomeCategory: CreateIncomeCategoryDto) {
+  async create(income_category: CreateIncomeCategoryDto) {
     try {
-      return await this.incomeCategoryRep.insert(incomeCategory);
+      return await this.incomeCategoryRep.insert(income_category);
     } catch (error) {
       error.userError = 'Произошла ошибка при создании новой доходной категории.';
       throw new HttpException(error, HttpStatus.NOT_FOUND);
     }
-    
   }
 
   async findAll(): Promise<IncomeCategory[]> {
@@ -33,8 +32,8 @@ export class IncomeCategoriesService {
     return await this.incomeCategoryRep.findOne({where: {income_category_id}});
   }
 
-  async update(income_category_id: number, incomeCategory: UpdateIncomeCategoryDto) {
-    return await this.incomeCategoryRep.update(income_category_id, incomeCategory);
+  async update(income_category_id: number, income_category: UpdateIncomeCategoryDto) {
+    return await this.incomeCategoryRep.update(income_category_id, income_category);
   }
 
   async remove(income_category_id: number) {
