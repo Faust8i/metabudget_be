@@ -1,4 +1,4 @@
-import { Injectable }       from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository }       from 'typeorm';
 
@@ -16,12 +16,18 @@ export class IncomeItemsService {
     @InjectRepository(IncomeItem) private readonly IncomeItemRep: Repository<IncomeItem>,
   ) {}
 
-  async create(incomeItem: CreateIncomeItemDto) {
-    return await this.IncomeItemRep.insert(incomeItem);
+  async create(income_item: CreateIncomeItemDto) {
+    try {
+      return await this.IncomeItemRep.insert(income_item);
+    } catch (error) {
+      error.userError = 'Произошла ошибка при создании доходной статьи.';
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async findAll() {
-    return await this.IncomeItemRep.createQueryBuilder('ii')
+    try {
+      return await this.IncomeItemRep.createQueryBuilder('ii')
       .select(['ii.income_item_id     as income_item_id',
                'ic.nm_income_category as nm_income_category',
                'ii.nm_income_item     as nm_income_item', 
@@ -29,18 +35,37 @@ export class IncomeItemsService {
       .leftJoin(IncomeCategory, 'ic', 'ic.income_category_id = ii.income_category_id')
       .orderBy({'ic.order_pos': 'ASC', 'ii.order_pos': 'ASC'})
       .getRawMany()
+    } catch (error) {
+      error.userError = 'Произошла ошибка при поиске доходных статей.';
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async findOne(income_item_id: number) {
-    return await this.IncomeItemRep.findOne({where: {income_item_id}});
+    try {
+      return await this.IncomeItemRep.findOne({where: {income_item_id}});
+    } catch (error) {
+      error.userError = 'Произошла ошибка при поиске доходной статьи.';
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
-  async update(income_item_id: number, incomeItem: UpdateIncomeItemDto) {
-    return await this.IncomeItemRep.update(income_item_id, incomeItem);
+  async update(income_item_id: number, income_item: UpdateIncomeItemDto) {
+    try {
+      return await this.IncomeItemRep.update(income_item_id, income_item);
+    } catch (error) {
+      error.userError = 'Произошла ошибка при обновлении доходной статьи.';
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async remove(income_item_id: number) {
-    return await this.IncomeItemRep.delete(income_item_id);
+    try {
+      return await this.IncomeItemRep.delete(income_item_id);
+    } catch (error) {
+      error.userError = 'Произошла ошибка при удалении доходной статьи.';
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
 }
