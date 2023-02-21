@@ -1,32 +1,38 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNumber, IsString, IsOptional, IsNotEmpty } from "class-validator";
 
-
-export class CreateIncomeItemDto {
+export class CreateIncomeRecordDto {
 
   @ApiProperty({
-    description: 'Наименование категории доходных статей',
-    example: 'Зарплата'
+    description: 'Дата доходной операции',
+    example: '2023-02-20T12:34:56+00:00'
+  })
+  @IsNotEmpty()
+  readonly income_dt: Date;
+
+  @ApiProperty({
+    description: 'Доходная статья',
+    example: '1'
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  readonly income_item_id?: number;
+
+  @ApiProperty({
+    description: 'Сумма дохода',
+    example: '3000.50'
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  readonly summa?: number;  
+
+  @ApiProperty({
+    description: 'Описание дохода',
+    example: 'За март'
   })
   @IsString()
-  @IsNotEmpty()
-  readonly nm_income_item: string;
-
-  @ApiProperty({
-    description: 'Позиция при сортировкие',
-    example: '1'
-  })
-  @IsNumber()
   @IsOptional()
-  readonly order_pos?: number;
-
-  @ApiProperty({
-    description: 'Доходная категория',
-    example: '1'
-  })
-  @IsNumber()
-  @IsNotEmpty()
-  readonly income_category_id?: number;
+  readonly description: string;
 
   @ApiProperty({
     description: 'Дата создания',
