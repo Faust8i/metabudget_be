@@ -5,7 +5,7 @@ export class CreateIncomeRecordDto {
 
   @ApiProperty({
     description: 'Дата доходной операции',
-    example: '2023-02-20T12:34:56+00:00'
+    example: '2023-02-20'
   })
   @IsNotEmpty()
   readonly income_dt: Date;

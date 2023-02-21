@@ -18,7 +18,7 @@ export class ErrorFilter implements ExceptionFilter {
     const messageUserError = error['userError'];
     
     console.error(error);
-    console.log(messageUserError);
+    console.log(`userError: ${messageUserError}`);
 
     response.status(status).json({ message, messageUserError });
   }
