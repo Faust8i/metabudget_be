@@ -6,7 +6,7 @@ export class IncomeRecord {
   @PrimaryGeneratedColumn()
   income_record_id: number;
 
-  @Column({ type: 'timestamp with time zone' })
+  @Column({ type: 'timestamp without time zone' })
   income_dt: Date;
 
   @Column()

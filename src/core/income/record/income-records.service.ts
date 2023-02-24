@@ -28,11 +28,12 @@ export class IncomeRecordsService {
   async findAll() {
     try {
       return await this.IncomeRecordRep.createQueryBuilder('ir')
-       .select(['ir.income_record_id as income_record_id',
-                'ii.nm_income_item   as nm_income_item',
-                'ii.income_item_id   as income_item_id',
-                'ir.summa            as summa',
-                'ir.description      as description'])
+       .select(["ir.income_record_id                 as income_record_id",
+                "ii.nm_income_item                   as nm_income_item",
+                "ii.income_item_id                   as income_item_id",
+                "ir.summa                            as summa",
+                "to_char(ir.income_dt, 'YYYY.MM.DD') as income_dt",
+                "ir.description                      as description"])
         .leftJoin(IncomeItem, 'ii', 'ii.income_item_id = ir.income_item_id')
         .orderBy({'ir.income_dt': 'ASC', 'ii.order_pos': 'ASC'})
         .getRawMany()
