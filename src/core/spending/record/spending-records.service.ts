@@ -28,11 +28,12 @@ export class SpendingRecordsService {
   async findAll() {
     try {
       return await this.SpendingRecordRep.createQueryBuilder('sr')
-       .select(['sr.spending_record_id as spending_record_id',
-                'si.nm_spending_item   as nm_spending_item',
-                'si.spending_item_id   as spending_item_id',
-                'sr.summa              as summa',
-                'sr.description        as description'])
+       .select(["sr.spending_record_id                 as spending_record_id",
+                "si.nm_spending_item                   as nm_spending_item",
+                "si.spending_item_id                   as spending_item_id",
+                "sr.summa                              as summa",
+                "to_char(sr.spending_dt, 'YYYY.MM.DD') as spending_dt",
+                "sr.description                        as description"])
         .leftJoin(SpendingItem, 'si', 'si.spending_item_id = sr.spending_item_id')
         .orderBy({'sr.spending_dt': 'ASC', 'si.order_pos': 'ASC'})
         .getRawMany()

@@ -6,7 +6,7 @@ export class SpendingRecord {
   @PrimaryGeneratedColumn()
   spending_record_id: number;
 
-  @Column({ type: 'timestamp with time zone' })
+  @Column({ type: 'timestamp without time zone' })
   spending_dt: Date;
 
   @Column()
