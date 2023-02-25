@@ -1,13 +1,13 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('income-records')
-export class IncomeRecord {
+@Entity('spending-records')
+export class SpendingRecord {
 
   @PrimaryGeneratedColumn()
-  income_record_id: number;
+  spending_record_id: number;
 
   @Column({ type: 'timestamp without time zone' })
-  income_dt: Date;
+  spending_dt: Date;
 
   @Column()
   description: string;
@@ -25,6 +25,6 @@ export class IncomeRecord {
   deleted_at: Date;
 
   @Column()
-  income_item_id: number;
+  spending_item_id: number;
 
 }
