@@ -42,18 +42,9 @@ export class IncomeCategoriesService {
     }
   }
 
-  async update(income_category_id: number, income_category: UpdateIncomeCategoryDto) {
+  async patch(income_category_id: number, income_category: UpdateIncomeCategoryDto) {
     try {
       return await this.incomeCategoryRep.update(income_category_id, income_category);
-    } catch (error) {
-      error.userError = 'Произошла ошибка при обновлении доходной категории.';
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
-  async remove(income_category_id: number) {
-    try {
-      return await this.incomeCategoryRep.delete(income_category_id);
     } catch (error) {
       error.userError = 'Произошла ошибка при удалении доходной категории.';
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);

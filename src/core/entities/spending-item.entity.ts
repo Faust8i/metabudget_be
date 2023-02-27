@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, DeleteDateColumn } from 'typeorm';
 import { SpendingCategory } from './spending-category.entity';
 
 @Entity('spending-items')
@@ -19,7 +19,7 @@ export class SpendingItem {
   @Column({ type: 'timestamp with time zone' })
   updated_at: Date;
 
-  @Column({ type: 'timestamp with time zone', nullable: true })
+  @DeleteDateColumn({ type: 'timestamp with time zone', nullable: true })
   deleted_at: Date;
 
   @Column()

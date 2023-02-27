@@ -28,12 +28,8 @@ export class IncomeItemsController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateIncomeItemDto: UpdateIncomeItemDto) {
-    return await this.incomeItemsService.update(+id, updateIncomeItemDto);
+  async patch(@Param('id') id: string, @Body() updateIncomeItemDto: UpdateIncomeItemDto) {
+    return await this.incomeItemsService.patch(+id, updateIncomeItemDto);
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return await this.incomeItemsService.remove(+id);
-  }
 }

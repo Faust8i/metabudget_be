@@ -33,6 +33,7 @@ export class SpendingItemsService {
                'si.nm_spending_item     as nm_spending_item', 
                'si.order_pos            as order_pos'])
       .leftJoin(SpendingCategory, 'sc', 'sc.spending_category_id = si.spending_category_id')
+      .where('sc.spending_category_id is not null')  // subject analogue 'sc.deleted_at is null'
       .orderBy({'sc.order_pos': 'ASC', 'si.order_pos': 'ASC'})
       .getRawMany()
     } catch (error) {
@@ -43,25 +44,20 @@ export class SpendingItemsService {
 
   async findOne(spending_item_id: number) {
     try {
-      return await this.SpendingItemRep.findOne({where: {spending_item_id}});
+      return await this.SpendingItemRep.createQueryBuilder('si')
+        .leftJoin(SpendingCategory, 'sc', 'sc.spending_category_id = si.spending_category_id')
+        .where({spending_item_id})
+        .andWhere('sc.spending_category_id is not null')
+        .getOne()
     } catch (error) {
       error.userError = 'Произошла ошибка при поиске расходной статьи.';
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  async update(spending_item_id: number, spending_item: UpdateSpendingItemDto) {
+  async patch(spending_item_id: number, spending_item: UpdateSpendingItemDto) {
     try {
       return await this.SpendingItemRep.update(spending_item_id, spending_item);
-    } catch (error) {
-      error.userError = 'Произошла ошибка при обновлении расходной статьи.';
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
-  async remove(spending_item_id: number) {
-    try {
-      return await this.SpendingItemRep.delete(spending_item_id);
     } catch (error) {
       error.userError = 'Произошла ошибка при удалении расходной статьи.';
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);

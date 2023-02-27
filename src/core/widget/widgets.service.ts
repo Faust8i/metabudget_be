@@ -19,18 +19,28 @@ export class WidgetsService {
         ), 
         monthly_incomes AS (
           select 
-            cast( to_char(income_dt, 'MM') as int ) as txn_month, 
-            sum(summa) as monthly_sum
-          from "income-records"
-          where extract(year from income_dt) = $1
+            cast( to_char(ir.income_dt, 'MM') as int ) as txn_month, 
+            sum(ir.summa) as monthly_sum
+          from "income-records" ir
+            left join "income-items" ii on ii.income_item_id = ir.income_item_id
+            left join "income-categories" ic on ic.income_category_id = ii.income_category_id
+          where extract(year from ir.income_dt) = $1
+            and ir.deleted_at is null
+            and ic.deleted_at is null
+            and ii.deleted_at is null
           group by txn_month
         ),
         monthly_spendings AS (
           select 
-            cast( to_char(spending_dt, 'MM') as int ) as txn_month, 
-            sum(summa) as monthly_sum
-          from "spending-records"
-          where extract(year from spending_dt) = $1
+            cast( to_char(sr.spending_dt, 'MM') as int ) as txn_month, 
+            sum(sr.summa) as monthly_sum
+          from "spending-records" sr
+            left join "spending-items" si on si.spending_item_id = sr.spending_item_id
+            left join "spending-categories" sc on sc.spending_category_id = si.spending_category_id
+          where extract(year from sr.spending_dt) = $1
+            and sr.deleted_at is null
+            and sc.deleted_at is null
+            and si.deleted_at is null
           group by txn_month
         )
         select

@@ -42,18 +42,9 @@ export class SpendingCategoriesService {
     }
   }
 
-  async update(spending_category_id: number, spending_category: UpdateSpendingCategoryDto) {
+  async patch(spending_category_id: number, spending_category: UpdateSpendingCategoryDto) {
     try {
       return await this.spendingCategoryRep.update(spending_category_id, spending_category);
-    } catch (error) {
-      error.userError = 'Произошла ошибка при обновлении расходной категории.';
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
-  async remove(spending_category_id: number) {
-    try {
-      return await this.spendingCategoryRep.delete(spending_category_id);
     } catch (error) {
       error.userError = 'Произошла ошибка при удалении расходной категории.';
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
