@@ -1,8 +1,9 @@
 import { Module }        from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { APP_FILTER }   from '@nestjs/core';
 
 import { ErrorFilter } from './core/filters/error.filter';
-import { APP_FILTER }  from '@nestjs/core';
+import { ORMConfig }   from './configs/orm-config'
 
 import { IncomeCategoriesController }   from './core/income/category/income-categories.controller';
 import { IncomeItemsController }        from './core/income/item/income-items.controller';
@@ -30,36 +31,25 @@ import { SpendingRecord }   from './core/entities/spending-record.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '1234QWer',
-      database: 'metabudget',
-      entities: [
-        IncomeCategory, IncomeItem, IncomeRecord,
-        SpendingCategory, SpendingItem, SpendingRecord,
-      ],
-    }), 
+    TypeOrmModule.forRoot(ORMConfig),
     TypeOrmModule.forFeature([
       IncomeCategory, IncomeItem, IncomeRecord,
       SpendingCategory, SpendingItem, SpendingRecord,
     ]),
   ],
-    controllers: [
-      IncomeCategoriesController, IncomeItemsController, IncomeRecordsController,
-      SpendingCategoriesController, SpendingItemsController, SpendingRecordsController,
-      WidgetsController,
-    ],
-    providers: [
-      {
-        provide: APP_FILTER,
-        useClass: ErrorFilter
-      },
-      IncomeCategoriesService,  IncomeItemsService, IncomeRecordsService,
-      SpendingCategoriesService,  SpendingItemsService, SpendingRecordsService,
-      WidgetsService,
-    ],
+  controllers: [
+    IncomeCategoriesController, IncomeItemsController, IncomeRecordsController,
+    SpendingCategoriesController, SpendingItemsController, SpendingRecordsController,
+    WidgetsController,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: ErrorFilter
+    },
+    IncomeCategoriesService,  IncomeItemsService, IncomeRecordsService,
+    SpendingCategoriesService,  SpendingItemsService, SpendingRecordsService,
+    WidgetsService,
+  ],
 })
 export class AppModule {}

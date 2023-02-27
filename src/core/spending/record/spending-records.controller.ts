@@ -28,12 +28,8 @@ export class SpendingRecordsController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateSpendingRecordDto: UpdateSpendingRecordDto) {
-    return await this.spendingRecordService.update(+id, updateSpendingRecordDto);
+  async patch(@Param('id') id: string, @Body() updateSpendingRecordDto: UpdateSpendingRecordDto) {
+    return await this.spendingRecordService.patch(+id, updateSpendingRecordDto);
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return await this.spendingRecordService.remove(+id);
-  }
 }

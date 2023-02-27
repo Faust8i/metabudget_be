@@ -28,12 +28,8 @@ export class IncomeCategoriesController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateIncomeCategoryDto: UpdateIncomeCategoryDto) {
-    return await this.incomeCategoriesService.update(+id, updateIncomeCategoryDto);
+  async patch(@Param('id') id: string, @Body() updateIncomeCategoryDto: UpdateIncomeCategoryDto) {
+    return await this.incomeCategoriesService.patch(+id, updateIncomeCategoryDto);
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return await this.incomeCategoriesService.remove(+id);
-  }
 }
