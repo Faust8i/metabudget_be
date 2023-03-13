@@ -42,7 +42,7 @@ export class SpendingCategoriesService {
     }
   }
 
-  async patch(spending_category_id: number, spending_category: UpdateSpendingCategoryDto) {
+  async delete(spending_category_id: number, spending_category: UpdateSpendingCategoryDto) {
     try {
       return await this.spendingCategoryRep.update(spending_category_id, spending_category);
     } catch (error) {

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 
 import { SpendingRecordsService } from './spending-records.service';
 
@@ -27,9 +27,9 @@ export class SpendingRecordsController {
     return await this.spendingRecordService.findOne(+id);
   }
 
-  @Patch(':id')
-  async patch(@Param('id') id: string, @Body() updateSpendingRecordDto: UpdateSpendingRecordDto) {
-    return await this.spendingRecordService.patch(+id, updateSpendingRecordDto);
+  @Delete(':id')
+  async delete(@Param('id') id: string, @Body() updateSpendingRecordDto: UpdateSpendingRecordDto) {
+    return await this.spendingRecordService.delete(+id, updateSpendingRecordDto);
   }
 
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 
 import { SpendingCategoriesService } from './spending-categories.service';
 
@@ -27,9 +27,9 @@ export class SpendingCategoriesController {
     return await this.spendingCategoriesService.findOne(+id);
   }
 
-  @Patch(':id')
-  async patch(@Param('id') id: string, @Body() updatespendingCategoryDto: UpdateSpendingCategoryDto) {
-    return await this.spendingCategoriesService.patch(+id, updatespendingCategoryDto);
+  @Delete(':id')
+  async delete(@Param('id') id: string, @Body() updatespendingCategoryDto: UpdateSpendingCategoryDto) {
+    return await this.spendingCategoriesService.delete(+id, updatespendingCategoryDto);
   }
 
 }

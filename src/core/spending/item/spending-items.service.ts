@@ -55,7 +55,7 @@ export class SpendingItemsService {
     }
   }
 
-  async patch(spending_item_id: number, spending_item: UpdateSpendingItemDto) {
+  async delete(spending_item_id: number, spending_item: UpdateSpendingItemDto) {
     try {
       return await this.SpendingItemRep.update(spending_item_id, spending_item);
     } catch (error) {

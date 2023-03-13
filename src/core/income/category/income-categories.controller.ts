@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 
 import { IncomeCategoriesService } from './income-categories.service';
 
@@ -27,9 +27,9 @@ export class IncomeCategoriesController {
     return await this.incomeCategoriesService.findOne(+id);
   }
 
-  @Patch(':id')
-  async patch(@Param('id') id: string, @Body() updateIncomeCategoryDto: UpdateIncomeCategoryDto) {
-    return await this.incomeCategoriesService.patch(+id, updateIncomeCategoryDto);
+  @Delete(':id')
+  async delete(@Param('id') id: string, @Body() updateIncomeCategoryDto: UpdateIncomeCategoryDto) {
+    return await this.incomeCategoriesService.delete(+id, updateIncomeCategoryDto);
   }
 
 }

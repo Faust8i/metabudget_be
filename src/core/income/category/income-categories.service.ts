@@ -42,7 +42,7 @@ export class IncomeCategoriesService {
     }
   }
 
-  async patch(income_category_id: number, income_category: UpdateIncomeCategoryDto) {
+  async delete(income_category_id: number, income_category: UpdateIncomeCategoryDto) {
     try {
       return await this.incomeCategoryRep.update(income_category_id, income_category);
     } catch (error) {
