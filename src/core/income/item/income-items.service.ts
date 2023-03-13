@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, Not, Repository }       from 'typeorm';
+import { Repository }       from 'typeorm';
 
 import { IncomeItem }     from '../../entities/income-item.entity';
 import { IncomeCategory } from '../../entities/income-category.entity';
@@ -55,7 +55,7 @@ export class IncomeItemsService {
     }
   }
 
-  async patch(income_item_id: number, income_item: UpdateIncomeItemDto) {
+  async delete(income_item_id: number, income_item: UpdateIncomeItemDto) {
     try {
       return await this.IncomeItemRep.update(income_item_id, income_item);
     } catch (error) {

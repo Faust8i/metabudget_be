@@ -62,7 +62,7 @@ export class SpendingRecordsService {
     }
   }
 
-  async patch(spending_record_id: number, spending_record: UpdateSpendingRecordDto) {
+  async delete(spending_record_id: number, spending_record: UpdateSpendingRecordDto) {
     try {
       return await this.SpendingRecordRep.update(spending_record_id, spending_record);
     } catch (error) {

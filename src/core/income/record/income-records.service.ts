@@ -62,7 +62,7 @@ export class IncomeRecordsService {
     }
   }
 
-  async patch(income_record_id: number, income_record: UpdateIncomeRecordDto) {
+  async delete(income_record_id: number, income_record: UpdateIncomeRecordDto) {
     try {
       return await this.IncomeRecordRep.update(income_record_id, income_record);
     } catch (error) {
