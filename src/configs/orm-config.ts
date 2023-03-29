@@ -1,11 +1,11 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-import { IncomeCategory }   from '../core/entities/income-category.entity';
-import { IncomeItem }       from '../core/entities/income-item.entity';
-import { IncomeRecord }     from '../core/entities/income-record.entity';
-import { SpendingCategory } from '../core/entities/spending-category.entity';
-import { SpendingItem }     from '../core/entities/spending-item.entity';
-import { SpendingRecord }   from '../core/entities/spending-record.entity';
+import { IncomeCategory }   from '../entities/income-category.entity';
+import { IncomeItem }       from '../entities/income-item.entity';
+import { IncomeRecord }     from '../entities/income-record.entity';
+import { SpendingCategory } from '../entities/spending-category.entity';
+import { SpendingItem }     from '../entities/spending-item.entity';
+import { SpendingRecord }   from '../entities/spending-record.entity';
 
 
 const dbConfig: TypeOrmModuleOptions = {

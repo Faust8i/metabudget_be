@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository }       from 'typeorm';
 
-import { SpendingCategory } from '../../entities/spending-category.entity';
+import { SpendingCategory } from '../../../entities/spending-category.entity';
 
 import { CreateSpendingCategoryDto } from './dto/create-spending-category.dto';
 import { UpdateSpendingCategoryDto } from './dto/update-spending-category.dto';

@@ -2,9 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository }       from 'typeorm';
 
-import { IncomeRecord }     from '../../entities/income-record.entity';
-import { IncomeItem }       from '../../entities/income-item.entity';
-import { IncomeCategory }   from '../../entities/income-category.entity';
+import { IncomeRecord }     from '../../../entities/income-record.entity';
+import { IncomeItem }       from '../../../entities/income-item.entity';
+import { IncomeCategory }   from '../../../entities/income-category.entity';
 
 import { CreateIncomeRecordDto } from './dto/create-income-record.dto';
 import { UpdateIncomeRecordDto } from './dto/update-income-record.dto';

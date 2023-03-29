@@ -2,9 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository }       from 'typeorm';
 
-import { SpendingRecord }   from '../../entities/spending-record.entity';
-import { SpendingItem }     from '../../entities/spending-item.entity';
-import { SpendingCategory } from '../../entities/spending-category.entity';
+import { SpendingRecord }   from '../../../entities/spending-record.entity';
+import { SpendingItem }     from '../../../entities/spending-item.entity';
+import { SpendingCategory } from '../../../entities/spending-category.entity';
 
 import { CreateSpendingRecordDto } from './dto/create-spending-record.dto';
 import { UpdateSpendingRecordDto } from './dto/update-spending-record.dto';
