@@ -2,8 +2,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import {json, urlencoded} from 'express';
-import * as rateLimit from 'express-rate-limit';
-import * as compression from 'compression';
+// import * as rateLimit from 'express-rate-limit';
+// import * as compression from 'compression';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
