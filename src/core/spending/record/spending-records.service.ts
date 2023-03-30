@@ -17,16 +17,17 @@ export class SpendingRecordsService {
     @InjectRepository(SpendingRecord) private readonly SpendingRecordRep: Repository<SpendingRecord>,
   ) {}
 
-  async create(createSpendingRecordDto: CreateSpendingRecordDto) {
+  async create(user_id: number, spending_record: CreateSpendingRecordDto) {
     try {
-      return await this.SpendingRecordRep.insert(createSpendingRecordDto);
+      spending_record['creator_id'] = user_id;
+      return await this.SpendingRecordRep.insert(spending_record);
     } catch (error) {
       error.userError = 'Произошла ошибка при создании записи о расходах.';
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  async findAll() {
+  async findAll(user_id: number) {
     try {
       return await this.SpendingRecordRep.createQueryBuilder('sr')
        .select(["sr.spending_record_id                 as spending_record_id",
@@ -37,7 +38,8 @@ export class SpendingRecordsService {
                 "sr.description                        as description"])
         .leftJoin(SpendingItem, 'si', 'si.spending_item_id = sr.spending_item_id')
         .leftJoin(SpendingCategory, 'sc', 'sc.spending_category_id = si.spending_category_id')
-        .where('si.spending_item_id is not null')         // subject analogue 'ii.deleted_at is null'
+        .where(`sr.creator_id = :user_id`, {user_id})
+        .andWhere('si.spending_item_id is not null')      // subject analogue 'ii.deleted_at is null'
         .andWhere('sc.spending_category_id is not null')  // subject analogue 'ic.deleted_at is null'
         .orderBy({'sr.spending_dt': 'ASC', 'si.order_pos': 'ASC'})
         .getRawMany()
@@ -47,12 +49,13 @@ export class SpendingRecordsService {
     }
   }
 
-  async findOne(spending_record_id: number) {
+  async findOne(user_id: number, spending_record_id: number) {
     try {
       return await this.SpendingRecordRep.createQueryBuilder('sr')
         .leftJoin(SpendingItem, 'si', 'si.spending_item_id = sr.spending_item_id')
         .leftJoin(SpendingCategory, 'sc', 'sc.spending_category_id = si.spending_category_id')
         .where({spending_record_id})
+        .andWhere(`sr.creator_id = :user_id`, {user_id})
         .andWhere('si.spending_item_id is not null')      // subject analogue 'si.deleted_at is null'
         .andWhere('sc.spending_category_id is not null')  // subject analogue 'sc.deleted_at is null'
         .getOne()
@@ -62,9 +65,15 @@ export class SpendingRecordsService {
     }
   }
 
-  async delete(spending_record_id: number, spending_record: UpdateSpendingRecordDto) {
+  async delete(user_id: number, spending_record_id: number, spending_record: UpdateSpendingRecordDto) {
     try {
-      return await this.SpendingRecordRep.update(spending_record_id, spending_record);
+      return await this.SpendingRecordRep.update(
+        {
+          spending_record_id,
+          creator_id: user_id
+        },
+        spending_record
+      );
     } catch (error) {
       error.userError = 'Произошла ошибка при удалении записи о расходах.';
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
