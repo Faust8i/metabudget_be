@@ -1,19 +1,16 @@
 import { Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn } from 'typeorm';
 
-@Entity('spending-records')
-export class SpendingRecord {
+@Entity('users')
+export class User {
 
   @PrimaryGeneratedColumn()
-  spending_record_id: number;
-
-  @Column({ type: 'timestamp without time zone' })
-  spending_dt: Date;
+  user_id: number;
 
   @Column()
-  description: string;
+  email: string;
 
-  @Column({ type: 'numeric', precision: 10, scale: 2 })
-  summa: number;
+  @Column()
+  password: string;
 
   @Column({ type: 'timestamp with time zone' })
   created_at: Date;
@@ -23,11 +20,5 @@ export class SpendingRecord {
 
   @DeleteDateColumn({ type: 'timestamp with time zone', nullable: true })
   deleted_at: Date;
-
-  @Column()
-  creator_id: number;
-
-  @Column()
-  spending_item_id: number;
 
 }

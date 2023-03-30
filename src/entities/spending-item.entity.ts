@@ -23,6 +23,9 @@ export class SpendingItem {
   deleted_at: Date;
 
   @Column()
+  creator_id: number;
+  
+  @Column()
   spending_category_id: number;
 
 }

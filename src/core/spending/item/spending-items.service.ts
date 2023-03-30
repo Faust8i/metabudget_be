@@ -16,8 +16,9 @@ export class SpendingItemsService {
     @InjectRepository(SpendingItem) private readonly SpendingItemRep: Repository<SpendingItem>,
   ) {}
 
-  async create(spending_item: CreateSpendingItemDto) {
+  async create(user_id: number, spending_item: CreateSpendingItemDto) {
     try {
+      spending_item['creator_id'] = user_id;
       return await this.SpendingItemRep.insert(spending_item);
     } catch (error) {
       error.userError = 'Произошла ошибка при создании доходной статьи.';
@@ -25,7 +26,7 @@ export class SpendingItemsService {
     }
   }
 
-  async findAll() {
+  async findAll(user_id: number) {
     try {
       return await this.SpendingItemRep.createQueryBuilder('si')
       .select(['si.spending_item_id     as spending_item_id',
@@ -33,7 +34,8 @@ export class SpendingItemsService {
                'si.nm_spending_item     as nm_spending_item', 
                'si.order_pos            as order_pos'])
       .leftJoin(SpendingCategory, 'sc', 'sc.spending_category_id = si.spending_category_id')
-      .where('sc.spending_category_id is not null')  // subject analogue 'sc.deleted_at is null'
+      .where(`si.creator_id = :user_id`, {user_id})
+      .andWhere('sc.spending_category_id is not null')  // subject analogue 'sc.deleted_at is null'
       .orderBy({'sc.order_pos': 'ASC', 'si.order_pos': 'ASC'})
       .getRawMany()
     } catch (error) {
@@ -42,11 +44,12 @@ export class SpendingItemsService {
     }
   }
 
-  async findOne(spending_item_id: number) {
+  async findOne(user_id: number, spending_item_id: number) {
     try {
       return await this.SpendingItemRep.createQueryBuilder('si')
         .leftJoin(SpendingCategory, 'sc', 'sc.spending_category_id = si.spending_category_id')
         .where({spending_item_id})
+        .andWhere(`si.creator_id = :user_id`, {user_id})
         .andWhere('sc.spending_category_id is not null')
         .getOne()
     } catch (error) {
@@ -55,9 +58,15 @@ export class SpendingItemsService {
     }
   }
 
-  async delete(spending_item_id: number, spending_item: UpdateSpendingItemDto) {
+  async delete(user_id: number, spending_item_id: number, spending_item: UpdateSpendingItemDto) {
     try {
-      return await this.SpendingItemRep.update(spending_item_id, spending_item);
+      return await this.SpendingItemRep.update(
+        {
+          spending_item_id,
+          creator_id: user_id
+        }, 
+        spending_item
+      );
     } catch (error) {
       error.userError = 'Произошла ошибка при удалении расходной статьи.';
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);

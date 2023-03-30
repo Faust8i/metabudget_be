@@ -25,6 +25,9 @@ export class IncomeRecord {
   deleted_at: Date;
 
   @Column()
+  creator_id: number;
+
+  @Column()
   income_item_id: number;
 
 }

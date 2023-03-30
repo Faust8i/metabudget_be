@@ -22,6 +22,9 @@ export class IncomeCategory {
   @DeleteDateColumn({ type: 'timestamp with time zone', nullable: true })
   deleted_at: Date;
   
+  @Column()
+  creator_id: number;
+
   @OneToMany(type => IncomeItem, incomeItem => incomeItem.income_category_id)
   income_items: IncomeItem[];
 

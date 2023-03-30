@@ -1,5 +1,5 @@
-import { Module }        from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module, UseGuards } from '@nestjs/common';
+import { TypeOrmModule }     from '@nestjs/typeorm';
 
 import { ORMConfig } from '../configs/orm-config'
 

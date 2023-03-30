@@ -11,7 +11,7 @@ export class WidgetsService {
     @InjectRepository(SpendingRecord) private readonly SpendingRecordRep: Repository<SpendingRecord>,
   ) {}
 
-  async getTwoLineWidgetData(year: number) {
+  async getTwoLineWidgetData(user_id: number, year: number) {
     try {
       return await this.SpendingRecordRep.query(`
         with months as (
@@ -25,6 +25,7 @@ export class WidgetsService {
             left join "income-items" ii on ii.income_item_id = ir.income_item_id
             left join "income-categories" ic on ic.income_category_id = ii.income_category_id
           where extract(year from ir.income_dt) = $1
+            and ir.creator_id = $2
             and ir.deleted_at is null
             and ic.deleted_at is null
             and ii.deleted_at is null
@@ -38,6 +39,7 @@ export class WidgetsService {
             left join "spending-items" si on si.spending_item_id = sr.spending_item_id
             left join "spending-categories" sc on sc.spending_category_id = si.spending_category_id
           where extract(year from sr.spending_dt) = $1
+            and sr.creator_id = $2
             and sr.deleted_at is null
             and sc.deleted_at is null
             and si.deleted_at is null
@@ -50,7 +52,7 @@ export class WidgetsService {
         from months m
           left join monthly_incomes i   on m.txn_month = i.txn_month
           left join monthly_spendings s on m.txn_month = s.txn_month
-        order by m.txn_month`, [year])
+        order by m.txn_month`, [year, user_id])
     } catch (error) {
       error.userError = 'Произошла ошибка при получении данных для виджета Доходы-Расходы.';
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);

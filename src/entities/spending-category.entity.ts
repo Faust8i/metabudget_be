@@ -22,6 +22,9 @@ export class SpendingCategory {
   @DeleteDateColumn({ type: 'timestamp with time zone', nullable: true })
   deleted_at: Date;
   
+  @Column()
+  creator_id: number;
+  
   @OneToMany(type => SpendingItem, spendingItem => spendingItem.spending_category_id)
   spending_items: SpendingItem[];
 

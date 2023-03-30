@@ -23,6 +23,9 @@ export class IncomeItem {
   deleted_at: Date;
 
   @Column()
+  creator_id: number;
+
+  @Column()
   income_category_id: number;
 
 }
