@@ -1,4 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards } from '@nestjs/common';
+
+import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
+import { UserJWT }      from '../../../decorator/user-jwt.decorator';
 
 import { IncomeItemsService } from './income-items.service';
 
@@ -6,6 +9,7 @@ import { CreateIncomeItemDto } from './dto/create-income-item.dto';
 import { UpdateIncomeItemDto } from './dto/update-income-item.dto';
 
 
+@UseGuards(JwtAuthGuard)
 @Controller('income-items')
 export class IncomeItemsController {
   constructor(
@@ -13,27 +17,35 @@ export class IncomeItemsController {
   ) {}
 
   @Post()
-  async create(@Body() createIncomeItemDto: CreateIncomeItemDto) {
-    return await this.incomeItemsService.create(createIncomeItemDto);
+  async create(
+    @UserJWT() user_id: number,
+    @Body()    item:    CreateIncomeItemDto,
+    ) {
+      return await this.incomeItemsService.create(user_id, item);
   }
 
   @Get()
-  async findAll() {
-    return await this.incomeItemsService.findAll();
+  async findAll(
+    @UserJWT() user_id: number,
+    ) {
+      return await this.incomeItemsService.findAll(user_id);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.incomeItemsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateIncomeItemDto: UpdateIncomeItemDto) {
-    return await this.incomeItemsService.update(+id, updateIncomeItemDto);
+  async findOne(
+    @UserJWT()   user_id: number,
+    @Param('id') item_id: string,
+    ) {
+      return await this.incomeItemsService.findOne(user_id, +item_id);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return await this.incomeItemsService.remove(+id);
+  async delete(
+    @UserJWT()   user_id: number,
+    @Param('id') item_id: string, 
+    @Body()      item:    UpdateIncomeItemDto,
+    ) {
+      return await this.incomeItemsService.delete(user_id, +item_id, item);
   }
+
 }

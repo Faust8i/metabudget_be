@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn } from 'typeorm';
 
 @Entity('income-records')
 export class IncomeRecord {
@@ -21,8 +21,11 @@ export class IncomeRecord {
   @Column({ type: 'timestamp with time zone' })
   updated_at: Date;
 
-  @Column({ type: 'timestamp with time zone', nullable: true })
+  @DeleteDateColumn({ type: 'timestamp with time zone', nullable: true })
   deleted_at: Date;
+
+  @Column()
+  creator_id: number;
 
   @Column()
   income_item_id: number;
