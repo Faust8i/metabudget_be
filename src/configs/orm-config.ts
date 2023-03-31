@@ -7,6 +7,7 @@ import { SpendingCategory } from '../entities/spending-category.entity';
 import { SpendingItem }     from '../entities/spending-item.entity';
 import { SpendingRecord }   from '../entities/spending-record.entity';
 import { User }             from '../entities/user.entity';
+import { Share }            from '../entities/share.entity';
 
 
 const dbConfig: TypeOrmModuleOptions = {
@@ -20,6 +21,7 @@ const dbConfig: TypeOrmModuleOptions = {
     IncomeCategory, IncomeItem, IncomeRecord,
     SpendingCategory, SpendingItem, SpendingRecord,
     User,
+    Share,
   ],
 };
 
