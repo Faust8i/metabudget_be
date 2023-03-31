@@ -1,11 +1,13 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository }       from 'typeorm';
+import { In, Repository }   from 'typeorm';
 
 import { SpendingCategory } from '../../../entities/spending-category.entity';
 
 import { CreateSpendingCategoryDto } from './dto/create-spending-category.dto';
 import { UpdateSpendingCategoryDto } from './dto/update-spending-category.dto';
+
+import { SharesService } from '../../sharing/shares.service';
 
 
 @Injectable()
@@ -13,6 +15,7 @@ export class SpendingCategoriesService {
   
   constructor(
     @InjectRepository(SpendingCategory) private readonly spendingCategoryRep: Repository<SpendingCategory>,
+    private readonly SharesService: SharesService,
   ) {}
 
   async create(user_id: number, spending_category: CreateSpendingCategoryDto) {
@@ -27,8 +30,9 @@ export class SpendingCategoriesService {
 
   async findAll(user_id: number): Promise<SpendingCategory[]> {
     try {
+      const sharedUserIds = await this.SharesService.getSharedUserIds(user_id);
       return await this.spendingCategoryRep.find({ 
-        where: {creator_id: user_id},
+        where: {creator_id: In( [user_id, ...sharedUserIds] )},
         order: {order_pos: "ASC"},
       });
     } catch (error) {
@@ -39,11 +43,12 @@ export class SpendingCategoriesService {
 
   async findOne(user_id: number, spending_category_id: number): Promise<SpendingCategory> {
     try {
+      const sharedUserIds = await this.SharesService.getSharedUserIds(user_id);
       return await this.spendingCategoryRep.findOne({
         where: {
           spending_category_id, 
-          creator_id: user_id,
-        }
+          creator_id: In( [user_id, ...sharedUserIds] ),
+        },
       });
     } catch (error) {
       error.userError = 'Произошла ошибка при поиске расходной категории.';
@@ -53,12 +58,13 @@ export class SpendingCategoriesService {
 
   async delete(user_id: number, spending_category_id: number, spending_category: UpdateSpendingCategoryDto) {
     try {
+      const sharedUserIds = await this.SharesService.getSharedUserIds(user_id);
       return await this.spendingCategoryRep.update(
         {
           spending_category_id,
-          creator_id: user_id
+          creator_id: In( [user_id, ...sharedUserIds] ),
         }, 
-        spending_category
+        spending_category,
       );
     } catch (error) {
       error.userError = 'Произошла ошибка при удалении расходной категории.';

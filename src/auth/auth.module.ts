@@ -26,6 +26,7 @@ import { LocalAuthGuard } from './guards/local-auth.guard'
   ],
   controllers: [AuthController],
   providers: [AuthService,
-    LocalStrategy, JwtStrategy, LocalAuthGuard],
+    LocalStrategy, JwtStrategy,
+    LocalAuthGuard],
 })
 export class AuthModule {}

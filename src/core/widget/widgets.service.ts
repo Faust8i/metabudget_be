@@ -4,15 +4,18 @@ import { Repository }       from 'typeorm';
 
 import { SpendingRecord } from '../../entities/spending-record.entity';
 
+import { SharesService } from '../sharing/shares.service';
 
 @Injectable()
 export class WidgetsService {
   constructor(
     @InjectRepository(SpendingRecord) private readonly SpendingRecordRep: Repository<SpendingRecord>,
+    private readonly SharesService: SharesService,
   ) {}
 
   async getTwoLineWidgetData(user_id: number, year: number) {
     try {
+      const sharedUserIds = await this.SharesService.getSharedUserIds(user_id);
       return await this.SpendingRecordRep.query(`
         with months as (
           select generate_series(1, 12) as txn_month
@@ -25,7 +28,7 @@ export class WidgetsService {
             left join "income-items" ii on ii.income_item_id = ir.income_item_id
             left join "income-categories" ic on ic.income_category_id = ii.income_category_id
           where extract(year from ir.income_dt) = $1
-            and ir.creator_id = $2
+            and ir.creator_id = ANY($2::integer[])
             and ir.deleted_at is null
             and ic.deleted_at is null
             and ii.deleted_at is null
@@ -39,7 +42,7 @@ export class WidgetsService {
             left join "spending-items" si on si.spending_item_id = sr.spending_item_id
             left join "spending-categories" sc on sc.spending_category_id = si.spending_category_id
           where extract(year from sr.spending_dt) = $1
-            and sr.creator_id = $2
+            and sr.creator_id = ANY($2::integer[])
             and sr.deleted_at is null
             and sc.deleted_at is null
             and si.deleted_at is null
@@ -52,7 +55,7 @@ export class WidgetsService {
         from months m
           left join monthly_incomes i   on m.txn_month = i.txn_month
           left join monthly_spendings s on m.txn_month = s.txn_month
-        order by m.txn_month`, [year, user_id])
+        order by m.txn_month`, [year, [user_id, ...sharedUserIds]] );
     } catch (error) {
       error.userError = 'Произошла ошибка при получении данных для виджета Доходы-Расходы.';
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
