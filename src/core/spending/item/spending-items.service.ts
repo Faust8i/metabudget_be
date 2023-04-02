@@ -2,8 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository }   from 'typeorm';
 
-import { SpendingItem }     from '../../../entities/spending-item.entity';
-import { SpendingCategory } from '../../../entities/spending-category.entity';
+import { SpendingItem }       from '../../../entities/spending-item.entity';
+import { SpendingCategory }   from '../../../entities/spending-category.entity';
+import { SpendingItemMarker } from '../../../entities/spending-item-marker.entity';
 
 import { CreateSpendingItemDto } from './dto/create-spending-item.dto';
 import { UpdateSpendingItemDto } from './dto/update-spending-item.dto';
@@ -33,15 +34,18 @@ export class SpendingItemsService {
     try {
       const sharedUserIds = await this.SharesService.getSharedUserIds(user_id);
       return await this.SpendingItemRep.createQueryBuilder('si')
-      .select(['si.spending_item_id     as spending_item_id',
-               'sc.nm_spending_category as nm_spending_category',
-               'si.nm_spending_item     as nm_spending_item', 
-               'si.order_pos            as order_pos'])
-      .leftJoin(SpendingCategory, 'sc', 'sc.spending_category_id = si.spending_category_id')
-      .where(`si.creator_id in (:...user_ids)`, { user_ids: [user_id, ...sharedUserIds] })
-      .andWhere('sc.spending_category_id is not null')  // subject analogue 'sc.deleted_at is null'
-      .orderBy({'sc.order_pos': 'ASC', 'si.order_pos': 'ASC'})
-      .getRawMany()
+        .select(['si.spending_item_id    as spending_item_id',
+                'sc.nm_spending_category as nm_spending_category',
+                'si.nm_spending_item     as nm_spending_item', 
+                'si.order_pos            as order_pos',
+                'sm.marker_value         as user_marker'])
+        .leftJoin(SpendingCategory,   'sc', 'sc.spending_category_id = si.spending_category_id')
+        .leftJoin(SpendingItemMarker, 'sm', 'sm.spending_item_id     = si.spending_item_id ' +
+          'and sm.deleted_at is null and sm.creator_id = :user_id', {user_id})
+        .where(`si.creator_id in (:...user_ids)`, { user_ids: [user_id, ...sharedUserIds] })
+        .andWhere('sc.spending_category_id is not null')  // subject analogue 'sc.deleted_at is null'
+        .orderBy({'sc.order_pos': 'ASC', 'si.order_pos': 'ASC'})
+        .getRawMany()
     } catch (error) {
       error.userError = 'Произошла ошибка при поиске расходных статей.';
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);

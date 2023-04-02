@@ -2,8 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository }   from 'typeorm';
 
-import { IncomeItem }     from '../../../entities/income-item.entity';
-import { IncomeCategory } from '../../../entities/income-category.entity';
+import { IncomeItem }       from '../../../entities/income-item.entity';
+import { IncomeCategory }   from '../../../entities/income-category.entity';
+import { IncomeItemMarker } from '../../../entities/income-item-marker.entity';
 
 import { CreateIncomeItemDto } from './dto/create-income-item.dto';
 import { UpdateIncomeItemDto } from './dto/update-income-item.dto';
@@ -34,10 +35,13 @@ export class IncomeItemsService {
       const sharedUserIds = await this.SharesService.getSharedUserIds(user_id);
       return await this.IncomeItemRep.createQueryBuilder('ii')
         .select(['ii.income_item_id     as income_item_id',
-                'ic.nm_income_category as nm_income_category',
-                'ii.nm_income_item     as nm_income_item', 
-                'ii.order_pos          as order_pos'])
-        .leftJoin(IncomeCategory, 'ic', 'ic.income_category_id = ii.income_category_id')
+                 'ic.nm_income_category as nm_income_category',
+                 'ii.nm_income_item     as nm_income_item', 
+                 'ii.order_pos          as order_pos',
+                 'im.marker_value       as user_marker'])
+        .leftJoin(IncomeCategory,   'ic', 'ic.income_category_id = ii.income_category_id')
+        .leftJoin(IncomeItemMarker, 'im', 'im.income_item_id     = ii.income_item_id ' +
+          'and im.deleted_at is null and im.creator_id = :user_id', {user_id})
         .where(`ii.creator_id in (:...user_ids)`, { user_ids: [user_id, ...sharedUserIds] })
         .andWhere('ic.income_category_id is not null')  // subject analogue 'ic.deleted_at is null'
         .orderBy({'ic.order_pos': 'ASC', 'ii.order_pos': 'ASC'})
