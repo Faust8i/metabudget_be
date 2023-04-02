@@ -45,7 +45,7 @@ export class IncomeRecordsService {
         .where(`ir.creator_id in (:...user_ids)`, { user_ids: [user_id, ...sharedUserIds] })
         .andWhere('ii.income_item_id is not null')      // subject analogue 'ii.deleted_at is null'
         .andWhere('ic.income_category_id is not null')  // subject analogue 'ic.deleted_at is null'
-        .orderBy({'ir.income_dt': 'ASC', 'ii.order_pos': 'ASC'})
+        .orderBy({'ir.income_dt': 'DESC', 'ii.order_pos': 'ASC'})
         .getRawMany()
     } catch (error) {
       error.userError = 'Произошла ошибка при поиске записей о доходах.';
