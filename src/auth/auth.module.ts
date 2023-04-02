@@ -21,7 +21,7 @@ import { LocalAuthGuard } from './guards/local-auth.guard'
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1800s' },
+      signOptions: { expiresIn: '3600s' },
     }),
   ],
   controllers: [AuthController],

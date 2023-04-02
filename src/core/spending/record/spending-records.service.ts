@@ -45,7 +45,7 @@ export class SpendingRecordsService {
         .where(`sr.creator_id in (:...user_ids)`, { user_ids: [user_id, ...sharedUserIds] })
         .andWhere('si.spending_item_id is not null')      // subject analogue 'ii.deleted_at is null'
         .andWhere('sc.spending_category_id is not null')  // subject analogue 'ic.deleted_at is null'
-        .orderBy({'sr.spending_dt': 'ASC', 'si.order_pos': 'ASC'})
+        .orderBy({'sr.spending_dt': 'DESC', 'si.order_pos': 'ASC'})
         .getRawMany()
     } catch (error) {
       error.userError = 'Произошла ошибка при поиске записей о расходах.';
