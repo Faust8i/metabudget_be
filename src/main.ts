@@ -11,7 +11,7 @@ async function bootstrap() {
   // app.useGlobalPipes(new ValidationPipe({ // автоматические проверки параметров в контроллерах
   //   whitelist: true,      // принимать только известные поля в DTO, другие исключаются из request
   //   transform: true }));  // автопреобразование входящих параметров в примитивы
-  app.enableCors();  // todo: вписать только фронт-сайт
+  app.enableCors();
   // app.use(compression());
   // app.use(json({ limit: '10mb' }));
   // app.use(urlencoded({ extended: true, limit: '10mb', parameterLimit: 1000 }));
