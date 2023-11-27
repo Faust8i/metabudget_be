@@ -32,7 +32,7 @@ export class AuthService {
   async checkUserJWT(email: string, id: number): Promise<boolean> {
     try {
       const user = await this.usersService.findOne(email);
-      if (user && user.user_id === id)
+      if (user?.user_id === id)
         return true;
       return false;
     } catch (error) {

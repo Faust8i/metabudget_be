@@ -5,8 +5,15 @@ import {json, urlencoded} from 'express';
 // import * as rateLimit from 'express-rate-limit';
 // import * as compression from 'compression';
 
+import { ConfigService } from '@nestjs/config';
+
+
+let PORT: number;
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  PORT = configService.get('app.port');
   app.setGlobalPrefix('api');
   // app.useGlobalPipes(new ValidationPipe({ // автоматические проверки параметров в контроллерах
   //   whitelist: true,      // принимать только известные поля в DTO, другие исключаются из request
@@ -21,10 +28,11 @@ async function bootstrap() {
   //         max: 10000               // ограничение 100 запросов для windowMs
   //     }),
   // );
-  await app.listen(33000);
+  await app.listen(PORT);
 }
+
 bootstrap()
   .then( () => {
-    console.log(`Application start on ${33000} port`);
+    console.log(`Application start on ${PORT} port`);
   })
   .catch((error) => console.error(`Error call Bootstrap(): ${error}`));
