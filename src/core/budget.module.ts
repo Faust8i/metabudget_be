@@ -1,7 +1,7 @@
 import { Module }        from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { ORMConfig } from '../configs/orm-config'
+import { ConfigModule, ConfigService }  from '@nestjs/config';
+import { join } from 'path';
 
 import { IncomeCategoriesController }    from './income/category/income-categories.controller';
 import { IncomeItemsController }         from './income/item/income-items.controller';
@@ -38,7 +38,20 @@ import { SpendingItemMarker } from '../entities/spending-item-marker.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(ORMConfig),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('db.host'),
+        port: configService.get('db.port'),
+        username: configService.get('db.username'),
+        password: configService.get('db.password'),
+        database: configService.get('db.database'),
+        entities: [join(__dirname, '../**/*.entity{.ts,.js}')],
+        extra: { softDelete: true, },
+      })
+    }),
     TypeOrmModule.forFeature([
       IncomeCategory,   IncomeItem,   IncomeRecord,
       SpendingCategory, SpendingItem, SpendingRecord,

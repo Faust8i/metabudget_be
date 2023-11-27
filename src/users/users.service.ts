@@ -6,11 +6,14 @@ import * as bcrypt          from 'bcryptjs'
 import { User }       from '../entities/user.entity';
 import { AccountDto } from 'src/auth/dto/account.dto';
 
+import { ConfigService } from '@nestjs/config';
+
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRep: Repository<User>,
+    private configService: ConfigService,
   ) {}
 
   async findOne(email: string): Promise<User | undefined> {
@@ -24,7 +27,8 @@ export class UsersService {
 
   async create(account: AccountDto): Promise<User> {
     try {
-      const salt = bcrypt.genSaltSync(10);
+      const saltCount = this.configService.get('crypt.salt');
+      const salt = bcrypt.genSaltSync(saltCount);
       const hashedPassword = bcrypt.hashSync(account.password, salt);
       const now = new Date();
       const user = {
