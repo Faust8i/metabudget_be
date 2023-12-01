@@ -5,6 +5,8 @@ import * as dotenv from 'dotenv';
 
 import { AuthService } from '../auth.service';
 
+import { DecodedJWT } from '../dto/decoded_JWT.dto';
+
 
 dotenv.config();
 
@@ -20,12 +22,22 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: any) {
-    const userJWTCorrect = await this.authService.checkUserJWT(payload.email, payload.id);
-    if (!userJWTCorrect)
-      throw new HttpException(new Error('Не корректный JWT.'), HttpStatus.UNAUTHORIZED);
-    return {
-      user_id: payload.id,
-    };
+  /**
+  * Валидация учетных данных
+  * @param decodedJWT Информация, раскрытая из токена доступа
+  * @returns Информация о пользователе, без пароля
+  */
+  async validate(decodedJWT: DecodedJWT) {
+    try {
+      const {email, id} = decodedJWT;
+      const userJWTCorrect = await this.authService.checkUserJWT(email, id);
+      if (!userJWTCorrect) throw new Error('Не корректный JWT.');
+      return {
+        user_id: id,
+      };
+    } catch (error) {
+      error.userError = 'Произошла ошибка про проверке токена доступа.';
+      throw new HttpException(error, HttpStatus.UNAUTHORIZED);
+    }
   }
 }

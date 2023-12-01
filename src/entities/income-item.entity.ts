@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, DeleteDateColumn } from 'typeorm';
-import { IncomeCategory } from './income-category.entity';
 
 @Entity('income-items')
 export class IncomeItem {
