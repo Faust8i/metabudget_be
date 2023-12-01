@@ -3,8 +3,10 @@ import {
   Catch,
   ArgumentsHost,
   HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
+
 
 @Catch()
 export class ErrorFilter implements ExceptionFilter {
@@ -12,13 +14,14 @@ export class ErrorFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
-    const status = error instanceof HttpException ? error.getStatus() : 500;
+    const status = error instanceof HttpException
+      ? error.getStatus()
+      : HttpStatus.INTERNAL_SERVER_ERROR;
 
     const message = error.message || 'Внутренняя ошибка сервера';
-    const messageUserError = error['userError'];
+    const messageUserError = error['response']['userError'];
     
     console.error(error);
-    console.error(`userError: ${messageUserError}`);
 
     response.status(status).json({ message, messageUserError });
   }

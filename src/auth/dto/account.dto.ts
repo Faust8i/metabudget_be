@@ -5,6 +5,7 @@ import { IsString, IsNotEmpty } from "class-validator";
 export class AccountDto {
 
   @ApiProperty({
+    type: 'string',
     description: 'Электронная почта',
     example: 'abc@qwerty.com'
   })
@@ -13,6 +14,7 @@ export class AccountDto {
   readonly email: string;
 
   @ApiProperty({
+    type: 'string',
     description: 'Пароль',
     example: 'kiP@M0lxOC'
   })

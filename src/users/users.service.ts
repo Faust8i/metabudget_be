@@ -3,10 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository }       from 'typeorm';
 import * as bcrypt          from 'bcryptjs'
 
-import { User }       from '../entities/user.entity';
-import { AccountDto } from 'src/auth/dto/account.dto';
-
 import { ConfigService } from '@nestjs/config';
+
+import { User } from '../entities/user.entity';
+
+import { AccountDto } from 'src/auth/dto/account.dto';
 
 
 @Injectable()
@@ -16,15 +17,25 @@ export class UsersService {
     private configService: ConfigService,
   ) {}
 
-  async findOne(email: string): Promise<User | undefined> {
+  /**
+  * Найти пользователя
+  * @param email Е-майл
+  * @returns Информация о пользователе
+  */
+  async findOne(email: string): Promise<User | null> {
     try {
-      return await this.userRep.findOne({where: {email}});
+      return await this.userRep.findOne({ where: {email} });
     } catch (error) {
       error.userError = 'Произошла ошибка при поиске пользователя.';
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
+  /**
+  * Создать пользователя
+  * @param account Учетная запись 
+  * @returns Информация о пользователе
+  */
   async create(account: AccountDto): Promise<User> {
     try {
       const saltCount = this.configService.get('crypt.salt');
