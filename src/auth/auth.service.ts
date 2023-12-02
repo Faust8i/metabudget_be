@@ -4,8 +4,11 @@ import * as bcrypt    from 'bcryptjs'
 
 import { UsersService } from '../users/users.service';
 
+import { User } from '../entities/user.entity';
+
 import { UserDto }    from './dto/user.dto';
 import { AccountDto } from './dto/account.dto';
+import { LoginResponseDto } from './dto/login_response.dto';
 
 
 @Injectable()
@@ -15,7 +18,13 @@ export class AuthService {
     private readonly jwtService:   JwtService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<object | null> {
+  /**
+  * Валидация учетных данных
+  * @param email Е-майл
+  * @param password Пароль
+  * @returns Информация о пользователе, без пароля
+  */
+  async validateUser(email: string, password: string): Promise<User | null> {
     try {
       const user = await this.usersService.findOne(email);
       if (user && bcrypt.compareSync(password, user.password)) {
@@ -24,37 +33,50 @@ export class AuthService {
       }
       return null;
     } catch (error) {
-      error.userError = 'Произошла ошибка при проверке пользователя.';
+      error.userError = 'Произошла ошибка при валидации учетных данных.';
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
+  /**
+  * Верификация е-майла
+  * @param email Е-майл
+  * @param id Регистрационный номер пользователя в системе
+  * @returns Соответствие е-майла пользователя его регистрационному номеру в системе
+  */
   async checkUserJWT(email: string, id: number): Promise<boolean> {
     try {
       const user = await this.usersService.findOne(email);
-      if (user && user.user_id === id)
-        return true;
-      return false;
+      return user?.user_id === id;
     } catch (error) {
       error.userError = 'Произошла ошибка при проверке пользователя.';
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  async registration(account: AccountDto): Promise<object>  {
+  /**
+  * Регистрация нового пользователя
+  * @param user Учетные данные
+  * @returns Токен доступа
+  */
+  async registration(account: AccountDto): Promise<LoginResponseDto> {
     try {
       let user = await this.usersService.findOne(account.email);
-      if (user)
-        throw new HttpException(new Error('Данный емайл занят.'), HttpStatus.CONFLICT);
+      if (user) throw new Error('Данный емайл занят.');
       user = await this.usersService.create(account);
       return await this.login(user);
     } catch (error) {
       error.userError = 'Произошла ошибка при регистрации пользователя.';
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(error, HttpStatus.UNAUTHORIZED);
     }
   }
 
-  async login(user: UserDto): Promise<object>  {
+  /**
+  * Аутентификация пользователя
+  * @param user Пользователь
+  * @returns Токен доступа
+  */
+  async login(user: UserDto): Promise<LoginResponseDto>  {
     try {
       const payload = {
         email: user.email,
@@ -65,7 +87,7 @@ export class AuthService {
       }
     } catch (error) {
       error.userError = 'Произошла ошибка при входе пользователя.';
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(error, HttpStatus.UNAUTHORIZED);
     }
   }
   

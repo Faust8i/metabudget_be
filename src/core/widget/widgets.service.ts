@@ -2,9 +2,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository }       from 'typeorm';
 
+import { SharesService } from '../sharing/shares.service';
+
 import { SpendingRecord } from '../../entities/spending-record.entity';
 
-import { SharesService } from '../sharing/shares.service';
 
 @Injectable()
 export class WidgetsService {
@@ -13,7 +14,13 @@ export class WidgetsService {
     private readonly SharesService: SharesService,
   ) {}
 
-  async getTwoLineWidgetData(user_id: number, year: number) {
+  /**
+  * Получение информации для построения виджета аналитики доходов и расходов в разрезе года
+  * @param user_id Идентификаторо пользователя
+  * @param year Год
+  * @returns 
+  */
+  async getTwoLineWidgetData(user_id: number, year: number): Promise<object> {
     try {
       const sharedUserIds = await this.SharesService.getSharedUserIds(user_id);
       return await this.SpendingRecordRep.query(`

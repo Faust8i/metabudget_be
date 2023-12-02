@@ -1,6 +1,6 @@
 {
   "name": "metabudget",
-  "version": "1.4.0",
+  "version": "1.9.0",
   "description": "",
   "author": "Dolgikh A.A.",
   "private": true,
@@ -22,12 +22,13 @@
   },
   "dependencies": {
     "@nestjs/common": "^9.2.1",
+    "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^9.2.1",
     "@nestjs/jwt": "^10.0.2",
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^9.2.1",
-    "@nestjs/swagger": "^6.2.1",
+    "@nestjs/swagger": "^6.3.0",
     "@nestjs/typeorm": "^9.0.1",
     "bcryptjs": "^2.4.3",
     "class-validator": "^0.14.0",
@@ -37,6 +38,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.1.0",
+    "swagger-ui-express": "^5.0.0",
     "typeorm": "^0.3.11"
   },
   "devDependencies": {
