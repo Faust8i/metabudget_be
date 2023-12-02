@@ -26,6 +26,6 @@ export class FindSpendingItemResponseDto {
     } ],
   })
   @IsArray()
-  readonly incomeItems: SpendingItem[];
+  readonly spendingItems: SpendingItem[];
 
 }
