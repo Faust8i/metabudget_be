@@ -52,7 +52,7 @@ export class SpendingItemsService {
       const sharedUserIds = await this.SharesService.getSharedUserIds(user_id);
       return {
         message: 'OK',
-        incomeItems: await this.SpendingItemRep.createQueryBuilder('si')
+        spendingItems: await this.SpendingItemRep.createQueryBuilder('si')
           .select(['si.spending_item_id    as spending_item_id',
                   'sc.nm_spending_category as nm_spending_category',
                   'si.nm_spending_item     as nm_spending_item', 
@@ -89,7 +89,7 @@ export class SpendingItemsService {
         .getOne();
       return {
         message: 'OK',
-        incomeItems: item ? [item] : [],
+        spendingItems: item ? [item] : [],
       };
     } catch (error) {
       error.userError = 'Произошла ошибка при поиске расходной статьи.';
